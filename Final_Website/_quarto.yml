@@ -17,7 +17,7 @@ website:
         href: data.qmd
     right:
       - icon: github
-        href: https://github.com/Glucier39/PSCI3200
+        href: https://github.com/Glucier39/PSCI3200_Final
 
 format:
   html:
