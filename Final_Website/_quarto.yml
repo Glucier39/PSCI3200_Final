@@ -1,28 +1,3 @@
 project:
   type: website
   output-dir: docs
-
-website:
-  title: "My PSCI3200 Site"
-  description: "Analysis and reports for PSCI3200"
-  favicon: images/favicon.ico
-
-  navbar:
-    left:
-      - text: "Home"
-        href: index.qmd
-      - text: "About"
-        href: about.qmd
-      - text: "Data"
-        href: data.qmd
-    right:
-      - icon: github
-        href: https://github.com/Glucier39/PSCI3200_Final
-
-format:
-  html:
-    theme:
-      light: cosmo
-      font: auto
-    toc: true
-    toc-location: left
