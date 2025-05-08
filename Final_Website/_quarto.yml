@@ -1,19 +1,22 @@
 project:
-  type: website
-  output-dir: docs
+  type: website        # <— this makes Quarto build a multi‑page site
+  output-dir: docs     # <— where the rendered site will go
+
 website:
-  title: "Final_Website"
+  title: "My PSCI3200 Site"
+  description: "Analysis and reports for PSCI3200"
   navbar:
     left:
-      - href: index.qmd
-        text: Home
-      - about.qmd
+      - text: "Home"    href: index.qmd
+      - text: "About"   href: about.qmd
+      - text: "Data"    href: data.qmd
+    right:
+      - icon: github    href: https://github.com/Glucier39/PSCI3200
 
 format:
   html:
-    theme: cosmo
-    css: styles.css
+    theme:
+      light: cosmo     # you can choose any of the built‑in Bootstrap themes
+      font: auto
     toc: true
-
-
-
+    toc-location: left
