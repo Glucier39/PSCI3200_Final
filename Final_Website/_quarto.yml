@@ -1,3 +1,6 @@
 project:
   type: website
   output-dir: docs
+with:
+  publish_branch: Web
+  publish_dir: docs
