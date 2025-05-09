@@ -1,0 +1,9 @@
+project:
+  type: website
+  output-dir: docs
+with:
+  publish_branch: Web
+  publish_dir: docs
+actions:
+  name: Disable Jekyll
+  run: touch docs/.nojekyll
