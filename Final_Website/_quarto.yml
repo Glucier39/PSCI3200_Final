@@ -1,3 +1,9 @@
 project:
   type: website
   output-dir: docs
+  
+website:
+  title: "Home"
+  navbar: 
+    left: 
+      - href: about.qmd

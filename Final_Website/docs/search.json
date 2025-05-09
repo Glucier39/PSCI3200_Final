@@ -2,9 +2,9 @@
   {
     "objectID": "about.html",
     "href": "about.html",
-    "title": "Testing Testing",
+    "title": "About",
     "section": "",
-    "text": "About this site\n\nprint(\"Hello World\")\n\n[1] \"Hello World\""
+    "text": "About this site\n\n1 + 1\n\n[1] 2"
   },
   {
     "objectID": "index.html",

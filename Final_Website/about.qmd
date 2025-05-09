@@ -1,9 +1,9 @@
 ---
-title: "Testing Testing"
+title: "About"
 ---
 
 About this site
 
 ```{r}
-print("Hello World")
+1 + 1
 ```
