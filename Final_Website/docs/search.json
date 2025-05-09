@@ -1,16 +1,23 @@
 [
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "PSCI3200 Final Project.html",
+    "href": "PSCI3200 Final Project.html",
+    "title": "PSCI3200 Final Project",
     "section": "",
-    "text": "About this site\n\n1 + 1\n\n[1] 2"
+    "text": "1 + 1\n\n[1] 2"
   },
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Final_Website",
+    "title": "Final Website",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
+    "text": "My name is Geddy Lucier and I am currently a junior at the University of Pennsylvania majoring in Political Economy and Environmental Management. This is a website dedicated to my academic and extracurricular projects."
+  },
+  {
+    "objectID": "index.html#home-page",
+    "href": "index.html#home-page",
+    "title": "Final Website",
+    "section": "",
+    "text": "My name is Geddy Lucier and I am currently a junior at the University of Pennsylvania majoring in Political Economy and Environmental Management. This is a website dedicated to my academic and extracurricular projects."
   }
 ]

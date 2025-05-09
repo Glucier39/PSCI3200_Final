@@ -1,0 +1,14 @@
+---
+title: "PSCI3200 Final Project"
+institute: "University of Pennsylvania"
+#class: "PSCI3200: Global Development - Intermediate Topics in Politics, Policy, and Data
+---
+
+
+
+
+
+
+```{r}
+1 + 1
+```

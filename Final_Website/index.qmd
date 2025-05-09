@@ -1,11 +1,21 @@
 ---
-title: "Final_Website"
+title: "Final Website"
+author: "Geddy Lucier"
+institute: "University of Pennsylvania"
+
+date: last-modified
+toc: true
+
+
+format: 
+  html:
+    self-contained: true
+
+editor: source
 ---
+## Home Page
 
-This is a Quarto website.
+My name is Geddy Lucier and I am currently a junior at the University of Pennsylvania majoring in Political Economy and Environmental Management. This is a website dedicated to my academic and extracurricular projects. 
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
 
-```{r}
-1 + 1
-```
+

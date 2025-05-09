@@ -6,4 +6,4 @@ website:
   title: "Home"
   navbar: 
     left: 
-      - href: about.qmd
+      - href: PSCI3200 Final Project.qmd
