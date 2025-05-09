@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -164,14 +130,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
-</div>
-</div>
+<p>All of the data and scripts for this assignment can be found here: https://github.com/Glucier39/PSCI3200_Final</p>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>Africa’s resource-rich nations frequently encounter a paradox: despite their abundant natural resource endowments, they often fail to achieve inclusive and sustained economic progress. Known as the resource curse or the “paradox of plenty”, resource curse literature posits that “countries with large endowments of natural resources, such as oil and gas, often perform worse in terms of economic development and governance than do countries with fewer resources,” despite the “prospects of wealth and opportunity that accompany the discovery and extraction” (Soros, 2007). In these environments, corruption thrives and authoritarian regimes</p>
+<p>While oil wealth holds the promise of accelerated development, it can also foster environments where corruption thrives and authoritarian regimes consolidate power. Extensive scholarship, including studies by Ross (2015) and Dreher et al.&nbsp;(2018), has documented how resource revenues enable ruling elites to bypass institutional constraints, leading to weakened public accountability and entrenched autocracy. Building on these insights, the present study examines a critical yet underexplored dimension: the role of Chinese loans in shaping governance and democratic outcomes in oil-exporting African countries.</p>
+<p>In recent years, China has emerged as a major financial actor on the African continent, as “39 Chinese lenders provided 1,243 loans amounting to $170.08 billion to 49 African governments and seven regional institutions” (Boston University Global Development Policy Center, 2023). Compared to traditional loans, Chinese contracts to Africa are shrouded in mystery. Unlike traditional lenders—such as the IMF, USAID, and other multilateral institutions—that typically condition their loans on reforms and transparency measures, Chinese loans are largely unconditional. Most Chinese contracts (especially post-2014) include strict confidentiality terms prohibit borrowers from disclosing loan details. Given their interest in African energy resources, these loans often use oil or mineral revenues as collateral. Finally, these arrangements are unusual in that they can place Chinese lenders ahead of others in line for repayment (i.e., “senior creditor” status) (Gelpern et. al, 2021).</p>
+<p>While the “resource curse” has been extensively studied in political economy literature, much of the focus has remained on how oil and mineral wealth distort governance incentives, weaken institutions, and enable authoritarian persistence. Scholars such as Ross (2001) and Auty (1993) have shown how resource-rich governments often circumvent the need for taxation and public accountability by leveraging resource revenues to consolidate political control. In parallel, a growing body of research has examined China’s expanding role as a global lender—particularly its large-scale financing of infrastructure projects across Africa. Studies from AidData and the Center for Global Development (e.g., Gelpern et al., 2021) have demonstrated that Chinese loans are often opaque, lack governance-related conditionality, and are frequently collateralized by future oil revenues. However, the existing literature remains limited in several key respects. Most studies have prioritized the economic and developmental impacts of Chinese financing—such as debt sustainability and infrastructure outcomes—while giving less attention to its political consequences. This research paper expands pre-existing resource curse literature by examining the political impact of Chinese loans on oil-rich countries through the lens of executive corruption, filling a gap in the literature which has often studied and projected the economic consequences of Africa’s debt to China.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -266,7 +234,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/Glucier39\.github\.io\/PSCI3200_Final\/");
+      var filterRegex = new RegExp('/' + window.location.host + '/');
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }

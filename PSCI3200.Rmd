@@ -51,7 +51,7 @@ africa_vdem <- Vdem %>%
   filter(country_name %in% africa_countries)
 ```
 
-```{r, warning = FALSE}
+```{r, warning = FALSE, message = FALSE}
 africa_iso3 <- c(
   "dza", # Algeria
   "ago", # Angola
@@ -275,54 +275,6 @@ comb <- comb %>%
 
 
 ```
-```{r}
-oil_agg$Country <-  as.factor(oil_agg$Country)
-
-model_oil <- lm(v2x_execorr ~year_count  + gdp_log + expofgdp_log + trade_exp_log + Country , data = oil_agg)
-model_base <- lm(v2x_execorr ~ year_count + gdp_log + expofgdp_log + trade_exp_log +  Country, data = comb)
-
-summary(model_oil)
-summary(model_base)
-
-```
-Stargazer
-```{r}
-stargazer(
-  model_base, model_oil,
-  type           = "text",               # "latex" or "html" i
-  title          = "All African States Regression vs Petrolstates",
-  column.labels  = c("Africa", "Petrolst"),
-  covariate.labels = c("Yearly Loan Count", "GDP Per Capita (Log)", "Log of Exports as % of GDP (Log)", "Log of Trade with China (Log)"),
-  dep.var.labels = "Miles per Gallon",
-  align          = TRUE,
-  no.space       = TRUE,
-  digits        = 4, 
-  omit          = "Country",          # regex: any variable name containing “Country”
-  omit.labels   = "Country FE",  
-  omit.stat      = c("f", "ser"),        # omit F-stat and se-residual if you like
-  star.cutoffs   = c(0.05, 0.01, 0.001)
-)
-```
-
-
-
-```{r}
-
-
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -418,11 +370,37 @@ oil_agg <- oil_agg %>%
 ```
 
 
-
 ```{r}
+oil_agg$Country <-  as.factor(oil_agg$Country)
 
+model_oil <- lm(v2x_execorr ~year_count  + gdp_log + expofgdp_log + trade_exp_log + Country , data = oil_agg)
+model_base <- lm(v2x_execorr ~ year_count + gdp_log + expofgdp_log + trade_exp_log +  Country, data = comb)
+
+summary(model_oil)
+summary(model_base)
 
 ```
+Stargazer
+```{r}
+stargazer(
+  model_base, model_oil,
+  type           = "text",               # "latex" or "html" i
+  title          = "All African States Regression vs Petrolstates",
+  column.labels  = c("Africa", "Petrolst"),
+  covariate.labels = c("Yearly Loan Count", "GDP Per Capita (Log)", "Log of Exports as % of GDP (Log)", "Log of Trade with China (Log)"),
+  dep.var.labels = "Miles per Gallon",
+  align          = TRUE,
+  no.space       = TRUE,
+  digits        = 4, 
+  omit          = "Country",          # regex: any variable name containing “Country”
+  omit.labels   = "Country FE",  
+  omit.stat      = c("f", "ser"),        # omit F-stat and se-residual if you like
+  star.cutoffs   = c(0.05, 0.01, 0.001)
+)
+```
+
+
+
 
 
 
