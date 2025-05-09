@@ -18,6 +18,7 @@ library(jsonlite)
 library(dplyr)
 library(purrr)
 library(comtradr)
+library(stargazer)
 
 book <- read.csv("https://raw.githubusercontent.com/Glucier39/PSCI3200/refs/heads/main/data/how_china_lends_dataset_version_1_0__test/CLA-Database-Raw-Data-Public-2024-FIN.csv")
 
@@ -274,16 +275,56 @@ comb <- comb %>%
 
 
 ```
-Initial Fixed Effect Regression
 ```{r}
-comb$Country <- as.factor(comb$Country)
+oil_agg$Country <-  as.factor(oil_agg$Country)
 
+model_oil <- lm(v2x_execorr ~year_count  + gdp_log + expofgdp_log + trade_exp_log + Country , data = oil_agg)
+model_base <- lm(v2x_execorr ~ year_count + gdp_log + expofgdp_log + trade_exp_log +  Country, data = comb)
 
-colnames(comb)
-# Run the regression with Country fixed effects
-model_base <- lm(execorr_stag ~ year_count + gdp_log + expofgdp_log + trade_exp_log +  Country, data = comb)
+summary(model_oil)
 summary(model_base)
+
 ```
+Stargazer
+```{r}
+stargazer(
+  model_base, model_oil,
+  type           = "text",               # "latex" or "html" i
+  title          = "All African States Regression vs Petrolstates",
+  column.labels  = c("Africa", "Petrolst"),
+  covariate.labels = c("Yearly Loan Count", "GDP Per Capita (Log)", "Log of Exports as % of GDP (Log)", "Log of Trade with China (Log)"),
+  dep.var.labels = "Miles per Gallon",
+  align          = TRUE,
+  no.space       = TRUE,
+  digits        = 4, 
+  omit          = "Country",          # regex: any variable name containing “Country”
+  omit.labels   = "Country FE",  
+  omit.stat      = c("f", "ser"),        # omit F-stat and se-residual if you like
+  star.cutoffs   = c(0.05, 0.01, 0.001)
+)
+```
+
+
+
+```{r}
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Oil Specific Data 
 
@@ -376,18 +417,18 @@ oil_agg <- oil_agg %>%
 
 ```
 
+
+
 ```{r}
-oil_agg$Country <-  as.factor(oil_agg$Country)
 
-colnames(oil_agg)
-unique(oil_agg$Country)
-model_oil <- lm(v2x_execorr ~ year_count + gdp_log + expofgdp_log + trade_exp_log + Country , data = oil_agg)
-model_base <- lm(v2x_execorr ~ year_count + gdp_log + expofgdp_log + trade_exp_log +  Country, data = comb)
-
-summary(model_oil)
-summary(model_base)
 
 ```
+
+
+
+
+
+
 
 
 ```{r}
