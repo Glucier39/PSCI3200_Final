@@ -5,10 +5,6 @@ Working Document 3200
 Preamble
 
 
-
-
-
-
 ```{r}
 library(haven)
 library(car)
@@ -36,15 +32,7 @@ Vdem <- read_csv("https://raw.githubusercontent.com/Glucier39/PSCI3200/refs/head
 ```
 
 
-
-
-
-
 Run a fixed effect regression on all of Africa as a baseline. 
-
-
-
-
 
 
 ```{r}
@@ -201,17 +189,9 @@ china_trade_africa <- china_trade_africa %>%
 ```
 
 
-
-
-
-
 ChinaTrade Created 
 
 All of Africa Check
-
-
-
-
 
 
 ```{r}
@@ -310,17 +290,9 @@ comb <- comb %>%
 
 
 
-
-
-
-
 Oil Specific Data 
 
 Filter WB and Trade data down to petrolstates
-
-
-
-
 
 
 ```{r}
@@ -344,15 +316,7 @@ petrol_trade_africa <- china_trade_africa %>%
 
 
 
-
-
-
-
 Cleaning Loan Data
-
-
-
-
 
 
 ```{r}
@@ -388,9 +352,9 @@ oil_agg <- oil_agg %>% arrange(country_name) %>% rename(Country = country_name)
 oil_agg <- left_join(wb_petrol, oil_agg, by = c("Country Name" = "Country", "Year" = "year"))  #combined dataframe created
 oil_agg <- left_join(oil_agg, petrol_trade_africa, by = c("Country Name" = "Country", "Year" = "year"))
 
-
+oil_agg$Year <- as.numeric(oil_agg$Year)
 oil_agg$execorr_stag <- sapply(oil_agg$Year, function(y) {
-  match_row <- oil_vdem[oil_vdem$year == y + 2, ] # arb lag 
+  match_row <- oil_vdem[oil_vdem$year == y + 1, ] # arb lag 
   if (nrow(match_row) > 0) {
     return(match_row$v2x_execorr[1])
   } else {
@@ -425,9 +389,12 @@ oil_agg <- oil_agg %>%
 
 ```{r}
 oil_agg$Country <-  as.factor(oil_agg$Country)
+oil_agg$Year <-  as.factor(oil_agg$Year)
+comb$Year <-  as.factor(comb$Year)
 
-model_oil <- lm(v2x_execorr ~year_count  + gdp_log + expofgdp_log + trade_exp_log + Country , data = oil_agg)
-model_base <- lm(v2x_execorr ~ year_count + gdp_log + expofgdp_log + trade_exp_log +  Country, data = comb)
+
+model_oil <- lm(v2x_execorr ~year_count  + gdp_log + expofgdp_log + trade_exp_log + Country + Year, data = oil_agg)
+model_base <- lm(v2x_execorr ~ year_count + gdp_log + expofgdp_log + trade_exp_log + Country + Year, data = comb)
 
 summary(model_oil)
 summary(model_base)
@@ -435,15 +402,7 @@ summary(model_base)
 ```
 
 
-
-
-
-
 Stargazer
-
-
-
-
 
 
 ```{r}
@@ -457,8 +416,8 @@ stargazer(
   align          = TRUE,
   no.space       = TRUE,
   digits        = 4, 
-  omit          = "Country",          # regex: any variable name containing “Country”
-  omit.labels   = "Country FE",  
+  omit           = c("Country", "Year"),        # Omit both country and year fixed effects
+  omit.labels    = c("Country FE", "Year FE"),  # Labels for the footnote
   omit.stat      = c("f", "ser"),        # omit F-stat and se-residual if you like
   star.cutoffs   = c(0.05, 0.01, 0.001)
 )
@@ -471,25 +430,19 @@ stargazer(
 
 
 
-
-
-
-
 Lagged Corruption
 
 
-
-
-
-
 ```{r}
+oil_agg$Year <-  as.factor(oil_agg$Year)
 
-lag_oil <- lm(execorr_stag ~year_count  + gdp_log + expofgdp_log + trade_exp_log + Country , data = oil_agg)
-lag_inverse <- lm(year_count ~ execorr_stag + gdp_log + expofgdp_log + trade_exp_log + Country, data = oil_agg)
+lag_oil <- lm(execorr_stag ~year_count  + gdp_log + expofgdp_log + trade_exp_log + Country + factor(Year), data = oil_agg)
+lag_inverse <- lm(year_count ~ execorr_stag + gdp_log + expofgdp_log + trade_exp_log + Country + factor(Year), data = oil_agg)
 
 summary(lag_oil)
 summary(lag_inverse)
 
+unique(oil_agg$Country)
 
 
 ```
@@ -507,15 +460,7 @@ summary(model_oil)
 
 
 
-
-
-
-
 All Data - may be subject to NA noise
-
-
-
-
 
 
 ```{r}
@@ -529,15 +474,7 @@ summary(model_base)
 
 
 
-
-
-
-
 OLS Scales 
-
-
-
-
 
 
 ```{r} 
@@ -554,15 +491,7 @@ summary(model2009)
 ```
 
 
-
-
-
-
 Corruption Over Time
-
-
-
-
 
 
 ```{r}
@@ -598,16 +527,8 @@ ggplot(vdem_2009, aes(x = year, y = v2x_corr, color = country_name)) +
 
 
 
-
-
-
-
 Load in
 China trade dependency
-
-
-
-
 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE,}
