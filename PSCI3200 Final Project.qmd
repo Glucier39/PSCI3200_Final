@@ -60,4 +60,8 @@ This model assumes a causal relationship between Chinese lending and executive c
 
 <iframe src="data/main_models.html" width="100%" height="600px" style="border: none;"></iframe>
 
-# 
+## Figure: Executive Corruption vs Chinese Lending (2000–2021)
+
+![Executive corruption plotted against Chinese loans in petrostates and all African countries.](data/combined_execorr_plot.png)
+
+
