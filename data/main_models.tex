@@ -1,0 +1,30 @@
+\begin{table}
+\centering
+\begin{talltblr}[         %% tabularray outer open
+caption={Table 1: Fixed Effects Regression of Chinese Loans on Executive Corruption (2000–2021)},
+note{}={* p \num{< 0.05}, ** p \num{< 0.01}, *** p \num{< 0.001}},
+note{ }={Fixed effects by country and year are included but not shown.},
+note{  }={Source: V-Dem Dataset (v2x\_execorr) and Boston University Chinese Loans to Africa (CLA) Database.},
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+colspec={Q[]Q[]Q[]},
+column{2,3}={}{halign=c,},
+column{1}={}{halign=l,},
+hline{10}={1,2,3}{solid, black, 0.05em},
+}                     %% tabularray inner close
+\toprule
+& Africa & Petrolstate \\ \midrule %% TinyTableHeader
+Yearly Loan Count & \num{0.002}*** & \num{0.002}*** \\
+& (\num{0.000}) & (\num{0.000}) \\
+GDP Per Capita (Log) & \num{0.058}*** & \num{0.036}* \\
+& (\num{0.014}) & (\num{0.014}) \\
+Log of Exports as \% of GDP (Log) & \num{0.032}* & \num{-0.126}*** \\
+& (\num{0.012}) & (\num{0.024}) \\
+Log of Trade with China (Log) & \num{-0.001} & \num{-0.001} \\
+& (\num{0.001}) & (\num{0.001}) \\
+Num.Obs. & \num{969} & \num{291} \\
+R2 & \num{0.878} & \num{0.789} \\
+R2 Adj. & \num{0.870} & \num{0.781} \\
+\bottomrule
+\end{talltblr}
+\end{table}

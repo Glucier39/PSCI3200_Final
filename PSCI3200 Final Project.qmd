@@ -53,3 +53,11 @@ This model assumes a causal relationship between Chinese lending and executive c
 <iframe src="data/summary_table_oil.html" width="100%" height="600px" style="border: none;">
 
 </iframe>
+
+# Results
+
+### Fixed Effect Regressions: Impact of Chinese Loans on Africa Vs Petrostates
+
+<iframe src="data/main_models.html" width="100%" height="600px" style="border: none;"></iframe>
+
+# 

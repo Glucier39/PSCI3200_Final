@@ -5,6 +5,10 @@ Working Document 3200
 Preamble
 
 
+
+
+
+
 ```{r}
 library(haven)
 library(car)
@@ -32,7 +36,15 @@ Vdem <- read_csv("https://raw.githubusercontent.com/Glucier39/PSCI3200/refs/head
 ```
 
 
+
+
+
+
 Run a fixed effect regression on all of Africa as a baseline. 
+
+
+
+
 
 
 ```{r}
@@ -189,9 +201,17 @@ china_trade_africa <- china_trade_africa %>%
 ```
 
 
+
+
+
+
 ChinaTrade Created 
 
 All of Africa Check
+
+
+
+
 
 
 ```{r}
@@ -290,9 +310,17 @@ comb <- comb %>%
 
 
 
+
+
+
+
 Oil Specific Data 
 
 Filter WB and Trade data down to petrolstates
+
+
+
+
 
 
 ```{r}
@@ -316,7 +344,15 @@ petrol_trade_africa <- china_trade_africa %>%
 
 
 
+
+
+
+
 Cleaning Loan Data
+
+
+
+
 
 
 ```{r}
@@ -402,7 +438,15 @@ summary(model_base)
 ```
 
 
+
+
+
+
 Stargazer
+
+
+
+
 
 
 ```{r}
@@ -430,7 +474,15 @@ stargazer(
 
 
 
+
+
+
+
 Lagged Corruption
+
+
+
+
 
 
 ```{r}
@@ -460,7 +512,15 @@ summary(model_oil)
 
 
 
+
+
+
+
 All Data - may be subject to NA noise
+
+
+
+
 
 
 ```{r}
@@ -474,7 +534,15 @@ summary(model_base)
 
 
 
+
+
+
+
 OLS Scales 
+
+
+
+
 
 
 ```{r} 
@@ -491,7 +559,15 @@ summary(model2009)
 ```
 
 
+
+
+
+
 Corruption Over Time
+
+
+
+
 
 
 ```{r}
@@ -527,8 +603,16 @@ ggplot(vdem_2009, aes(x = year, y = v2x_corr, color = country_name)) +
 
 
 
+
+
+
+
 Load in
 China trade dependency
+
+
+
+
 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE,}
