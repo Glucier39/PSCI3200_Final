@@ -67,6 +67,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -170,14 +199,74 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="fixed-effect-regressions-impact-of-chinese-loans-on-africa-vs-petrostates">Fixed Effect Regressions: Impact of Chinese Loans on Africa Vs Petrostates</h3>
 <iframe src="data/main_models.html" width="100%" height="600px" style="border: none;">
 </iframe>
+<p>The regression table supports the hypothesis that increased Chinese lending is associated with greater corruption, with statistically significant coefficients in both models. Substantively, for every one additional Chinese loan a country receives in a given year, its executive corruption index score increases by 0.0024 in the full African sample and 0.0038 among petrostates. While the absolute difference between these effects (0.0014) may appear small, it becomes more meaningful when viewed in the context of the V-Dem corruption index’s scale. Across all observations, the executive corruption index ranges from 0.485 to 0.985—a span of just 0.5. This means a change of 0.0038 represents roughly 0.76% of the total observed range. In countries receiving high loan volumes, the cumulative effect could reach a noticeable fraction of the corruption index. As stated previously, this small effect size was entirely to be expected. The stronger relationship observed in petrostates supports theories that resource-rich regimes may be especially susceptible to external financing mechanisms that enable elite capture or reduce domestic accountability. In the African sample, GDP per capita is positively and significantly associated with executive corruption, suggesting that as countries grow wealthier, political elites may gain greater access to rents without proportional increases in oversight. In contrast, trade with China shows no significant relationship. However, among petrostates, the pattern differs: GDP per capita is not significant, while trade with China becomes a strong and negative predictor of corruption. Here, GDP per capita may have little impact on executive corruption because oil revenues often concentrate wealth among elites without strengthening public accountability. As a result, economic growth does not necessarily curb rent-seeking, reflecting a classic resource curse dynamic.</p>
 </section>
-<section id="figure-executive-corruption-vs-chinese-lending-20002021" class="level2">
-<h2 class="anchored" data-anchor-id="figure-executive-corruption-vs-chinese-lending-20002021">Figure: Executive Corruption vs Chinese Lending (2000–2021)</h2>
+<section id="scatterplots-executive-corruption-vs-chinese-lending-20002021" class="level2">
+<h2 class="anchored" data-anchor-id="scatterplots-executive-corruption-vs-chinese-lending-20002021">Scatterplots: Executive Corruption vs Chinese Lending (2000–2021)</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="data/combined_execorr_plot.png" class="img-fluid figure-img"></p>
 <figcaption>Executive corruption plotted against Chinese loans in petrostates and all African countries.</figcaption>
 </figure>
+</div>
+<p>The scatterplots display that most country-year observations cluster around low Chinese loan counts (especially between 0–10), with very few receiving over 40 loans in a single year. Between both graphs, however, the relationships are skewed heavily by outliers. In this case, Angola received 80+ loans in 2016, disproportionately influencing the regression line and inflating the apparent relationship between loan volume and corruption. Moreover, the effect size should be interpreted with caution, as it may not reflect the experience of the typical African country.</p>
+<p>While the models show a relationship between Chinese Loans and corruption, the relationship cannot be defined yet as causal: reverse causality remains a concern. It is still possible that, rather than Chinese loans driving executive corruption, corrupt countries are more likely to receive loans because they are excluded from other funding sources or because Chinese lenders face fewer political conditionalities. To address this, I performed lagged regressions in my empirical extension to establish directional causality.</p>
+</section>
+</section>
+<section id="emperical-extension" class="level1">
+<h1>Emperical Extension</h1>
+<p>A lagged regression serves as a valuable empirical extension because it introduces temporal ordering to help address concerns about reverse causality. Here, the core question is whether increased Chinese lending causes higher levels of executive corruption, or whether more corrupt regimes receive more Chinese loans. To investigate this, I created two staggered variables to represent executive corruption and loan count two years ahead. I then ran two regressions: one testing whether current loan volumes predict corruption levels two years later, and another testing whether current corruption predicts loan volumes two years later.</p>
+<section id="chinese-loans---executive-corruption-in-2-years" class="level3">
+<h3 class="anchored" data-anchor-id="chinese-loans---executive-corruption-in-2-years">Chinese Loans -&gt; Executive Corruption in 2 Years</h3>
+<p><span class="math display">\[\begin{equation}
+\text{ExecCorr}_{it} = \beta_1 \cdot \text{Loans}_{it} + \beta_2 \cdot \text{GDP}_{it} + \beta_3 \cdot \text{Exports}_{it} + \beta_4 \cdot \text{Trade}_{it} + \alpha_i + \gamma_t + \epsilon_{it}
+\end{equation}\]</span></p>
+</section>
+<section id="executive-corruption---chinese-loans-in-2-years" class="level3">
+<h3 class="anchored" data-anchor-id="executive-corruption---chinese-loans-in-2-years">Executive Corruption -&gt; Chinese Loans in 2 Years</h3>
+<p><span class="math display">\[\begin{equation}
+\text{Loans}_{it} = \beta_1 \cdot \text{ExecCorr}_{it} + \beta_2 \cdot \text{GDP}_{it} + \beta_3 \cdot \text{Exports}_{it} + \beta_4 \cdot \text{Trade}_{it} + \alpha_i + \gamma_t + \epsilon_{it}
+\end{equation}\]</span></p>
+<section id="notation" class="level4">
+<h4 class="anchored" data-anchor-id="notation">Notation</h4>
+<ul>
+<li><span class="math inline">\(i\)</span>: Country<br>
+</li>
+<li><span class="math inline">\(t\)</span>: Year<br>
+</li>
+<li><span class="math inline">\(\alpha_i\)</span>: Country fixed effects (e.g., geography, institutions)<br>
+</li>
+<li><span class="math inline">\(\gamma_t\)</span>: Year fixed effects (e.g., global or regional shocks)<br>
+</li>
+<li><span class="math inline">\(\epsilon_{it}\)</span>: Error term</li>
+</ul>
+<p>If previous loan levels significantly predict future corruption, this suggests that loans may be shaping governance outcomes over time. Conversely, we can also test the reverse by lagging the dependent variable—executive corruption—to see whether past corruption levels predict future loan volumes. If this relationship is weak or insignificant while the first is strong, it strengthens the case for a causal effect running from loans to corruption. This strategy helps rule out simultaneity, where both variables move together for unrelated reasons, and provides a clearer test of directionality, enhancing the credibility of the original hypothesis.</p>
+<iframe src="data/lagged_models.html" width="100%" height="600px" style="border: none;">
+</iframe>
+</section>
+</section>
+<section id="regression-results" class="level2">
+<h2 class="anchored" data-anchor-id="regression-results">Regression Results</h2>
+<div>
+
+</div>
+<div class="columns quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="column quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<section id="table-1-loans-to-corruption-regression" class="level3">
+<h3 class="anchored" data-anchor-id="table-1-loans-to-corruption-regression">Table 1: Loans to Corruption Regression</h3>
+<iframe src="data/lag_oil_model.html" width="100%" height="400px" style="border: none;">
+</iframe>
+</section>
+</div>
+<div class="column quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<section id="table-2-corruption-to-loans-regression" class="level3">
+<h3 class="anchored" data-anchor-id="table-2-corruption-to-loans-regression">Table 2: Corruption to Loans Regression</h3>
+<iframe src="data/lag_inverse_model.html" width="100%" height="400px" style="border: none;">
+</iframe>
+</section>
+</div>
+</div>
 </div>
 
 

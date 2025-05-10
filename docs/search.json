@@ -39,6 +39,20 @@
     "href": "PSCI3200 Final Project.html#figure-executive-corruption-vs-chinese-lending-20002021",
     "title": "PSCI3200 Final Project",
     "section": "Figure: Executive Corruption vs Chinese Lending (2000–2021)",
-    "text": "Figure: Executive Corruption vs Chinese Lending (2000–2021)\n\n\n\nExecutive corruption plotted against Chinese loans in petrostates and all African countries."
+    "text": "Figure: Executive Corruption vs Chinese Lending (2000–2021)\n\n\n\nExecutive corruption plotted against Chinese loans in petrostates and all African countries.\n\n\nThe scatterplots display that most country-year observations cluster around low Chinese loan counts (especially between 0–10), with very few receiving over 40 loans in a single year. Between both graphs, however, the relationships are skewed heavily by outliers. In this case, Angola received 80+ loans in 2016, disproportionately influencing the regression line and inflating the apparent relationship between loan volume and corruption. Moreover, the effect size should be interpreted with caution, as it may not reflect the experience of the typical African country.\nWhile the models show a relationship between Chinese Loans and corruption, the relationship cannot be defined yet as causal: reverse causality remains a concern. It is still possible that, rather than Chinese loans driving executive corruption, corrupt countries are more likely to receive loans because they are excluded from other funding sources or because Chinese lenders face fewer political conditionalities. To address this, I performed lagged regressions in my empirical extension to establish directional causality."
+  },
+  {
+    "objectID": "PSCI3200 Final Project.html#scatterplots-executive-corruption-vs-chinese-lending-20002021",
+    "href": "PSCI3200 Final Project.html#scatterplots-executive-corruption-vs-chinese-lending-20002021",
+    "title": "PSCI3200 Final Project",
+    "section": "Scatterplots: Executive Corruption vs Chinese Lending (2000–2021)",
+    "text": "Scatterplots: Executive Corruption vs Chinese Lending (2000–2021)\n\n\n\nExecutive corruption plotted against Chinese loans in petrostates and all African countries.\n\n\nThe scatterplots display that most country-year observations cluster around low Chinese loan counts (especially between 0–10), with very few receiving over 40 loans in a single year. Between both graphs, however, the relationships are skewed heavily by outliers. In this case, Angola received 80+ loans in 2016, disproportionately influencing the regression line and inflating the apparent relationship between loan volume and corruption. Moreover, the effect size should be interpreted with caution, as it may not reflect the experience of the typical African country.\nWhile the models show a relationship between Chinese Loans and corruption, the relationship cannot be defined yet as causal: reverse causality remains a concern. It is still possible that, rather than Chinese loans driving executive corruption, corrupt countries are more likely to receive loans because they are excluded from other funding sources or because Chinese lenders face fewer political conditionalities. To address this, I performed lagged regressions in my empirical extension to establish directional causality."
+  },
+  {
+    "objectID": "PSCI3200 Final Project.html#regression-results",
+    "href": "PSCI3200 Final Project.html#regression-results",
+    "title": "PSCI3200 Final Project",
+    "section": "Regression Results",
+    "text": "Regression Results\n\n\n\n\n\n\n\nTable 1: Loans to Corruption Regression\n\n\n\n\n\n\nTable 2: Corruption to Loans Regression"
   }
 ]

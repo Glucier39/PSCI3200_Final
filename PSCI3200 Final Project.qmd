@@ -60,8 +60,65 @@ This model assumes a causal relationship between Chinese lending and executive c
 
 <iframe src="data/main_models.html" width="100%" height="600px" style="border: none;"></iframe>
 
-## Figure: Executive Corruption vs Chinese Lending (2000–2021)
+The regression table supports the hypothesis that increased Chinese lending is associated with greater corruption, with statistically significant coefficients in both models. Substantively, for every one additional Chinese loan a country receives in a given year, its executive corruption index score increases by 0.0024 in the full African sample and 0.0038 among petrostates. While the absolute difference between these effects (0.0014) may appear small, it becomes more meaningful when viewed in the context of the V-Dem corruption index’s scale. 
+Across all observations, the executive corruption index ranges from 0.485 to 0.985—a span of just 0.5. This means a change of 0.0038 represents roughly 0.76% of the total observed range. In countries receiving high loan volumes, the cumulative effect could reach a noticeable fraction of the corruption index. As stated previously, this small effect size was entirely to be expected. The stronger relationship observed in petrostates supports theories that resource-rich regimes may be especially susceptible to external financing mechanisms that enable elite capture or reduce domestic accountability.
+In the African sample, GDP per capita is positively and significantly associated with executive corruption, suggesting that as countries grow wealthier, political elites may gain greater access to rents without proportional increases in oversight. In contrast, trade with China shows no significant relationship. However, among petrostates, the pattern differs: GDP per capita is not significant, while trade with China becomes a strong and negative predictor of corruption. Here,  GDP per capita may have little impact on executive corruption because oil revenues often concentrate wealth among elites without strengthening public accountability. As a result, economic growth does not necessarily curb rent-seeking, reflecting a classic resource curse dynamic.
+
+
+## Scatterplots: Executive Corruption vs Chinese Lending (2000–2021)
 
 ![Executive corruption plotted against Chinese loans in petrostates and all African countries.](data/combined_execorr_plot.png)
+
+The scatterplots  display that most country-year observations cluster around low Chinese loan counts (especially between 0–10), with very few receiving over 40 loans in a single year. Between both graphs, however, the relationships are skewed heavily by outliers. In this case, Angola received 80+ loans in 2016, disproportionately influencing the regression line and inflating the apparent relationship between loan volume and corruption. Moreover, the effect size should be interpreted with caution, as it may not reflect the experience of the typical African country.
+
+While the models show a relationship between Chinese Loans and corruption, the relationship cannot be defined yet as causal: reverse causality remains a concern. It is still possible that, rather than Chinese loans driving executive corruption, corrupt countries are more likely to receive loans because they are excluded from other funding sources or because Chinese lenders face fewer political conditionalities. To address this, I performed lagged regressions in my empirical extension to establish directional causality.
+
+# Emperical Extension
+
+A lagged regression serves as a valuable empirical extension because it introduces temporal ordering to help address concerns about reverse causality. Here, the core question is whether increased Chinese lending causes higher levels of executive corruption, or whether more corrupt regimes receive more Chinese loans. To investigate this, I created two staggered variables to represent executive corruption and loan count two years ahead. I then ran two regressions: one testing whether current loan volumes predict corruption levels two years later, and another testing whether current corruption predicts loan volumes two years later. 
+
+### Chinese Loans -> Executive Corruption in 2 Years
+
+\begin{equation}
+\text{ExecCorr}_{it} = \beta_1 \cdot \text{Loans}_{it} + \beta_2 \cdot \text{GDP}_{it} + \beta_3 \cdot \text{Exports}_{it} + \beta_4 \cdot \text{Trade}_{it} + \alpha_i + \gamma_t + \epsilon_{it}
+\end{equation}
+
+### Executive Corruption -> Chinese Loans in 2 Years
+
+\begin{equation}
+\text{Loans}_{it} = \beta_1 \cdot \text{ExecCorr}_{it} + \beta_2 \cdot \text{GDP}_{it} + \beta_3 \cdot \text{Exports}_{it} + \beta_4 \cdot \text{Trade}_{it} + \alpha_i + \gamma_t + \epsilon_{it}
+\end{equation}
+
+#### Notation
+
+- $i$: Country  
+- $t$: Year  
+- $\alpha_i$: Country fixed effects (e.g., geography, institutions)  
+- $\gamma_t$: Year fixed effects (e.g., global or regional shocks)  
+- $\epsilon_{it}$: Error term  
+
+If previous loan levels significantly predict future corruption, this suggests that loans may be shaping governance outcomes over time. Conversely, we can also test the reverse by lagging the dependent variable—executive corruption—to see whether past corruption levels predict future loan volumes. If this relationship is weak or insignificant while the first is strong, it strengthens the case for a causal effect running from loans to corruption. This strategy helps rule out simultaneity, where both variables move together for unrelated reasons, and provides a clearer test of directionality, enhancing the credibility of the original hypothesis.
+
+<iframe src="data/lagged_models.html" width="100%" height="600px" style="border: none;"></iframe>
+
+## Regression Results
+
+::: {.columns layout-ncol=2}
+
+::: {.column}
+
+### Table 1: Loans to Corruption Regression  
+<iframe src="data/lag_oil_model.html" width="100%" height="400px" style="border: none;"></iframe>
+
+:::
+
+::: {.column}
+
+### Table 2: Corruption to Loans Regression  
+<iframe src="data/lag_inverse_model.html" width="100%" height="400px" style="border: none;"></iframe>
+
+:::
+
+:::
 
 

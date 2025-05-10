@@ -1,0 +1,153 @@
+<!-- preamble start -->
+<!DOCTYPE html> 
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytable_z5n8g96pbtpo6s7x4qj5</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+<!-- preamble end -->
+
+    <script>
+
+      function styleCell_z5n8g96pbtpo6s7x4qj5(i, j, css_id) {
+          var table = document.getElementById("tinytable_z5n8g96pbtpo6s7x4qj5");
+          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+          if (cell) {
+              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
+              cell.classList.add(css_id);
+          } else {
+              console.warn(`Cell at (${i}, ${j}) not found.`);
+          }
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_z5n8g96pbtpo6s7x4qj5');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_z5n8g96pbtpo6s7x4qj5(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_z5n8g96pbtpo6s7x4qj5");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: 9, j: 1 },  ], css_id: 'tinytable_css_tbztowqdukj0ogi5g48u',}, 
+          { positions: [ { i: 6, j: 1 },  ], css_id: 'tinytable_css_4ow4lhzu6tv67dpxiifd',}, 
+          { positions: [ { i: 1, j: 1 }, { i: 2, j: 1 }, { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 5, j: 1 }, { i: 7, j: 1 }, { i: 8, j: 1 },  ], css_id: 'tinytable_css_xqwollfxlygnmkd8njke',}, 
+          { positions: [ { i: 0, j: 1 },  ], css_id: 'tinytable_css_t8fpfgj522zcicuz35tk',}, 
+          { positions: [ { i: 9, j: 0 },  ], css_id: 'tinytable_css_ikvntk9od4bdt1spvx9w',}, 
+          { positions: [ { i: 6, j: 0 },  ], css_id: 'tinytable_css_yz4cgu1apwyqmrtp5h71',}, 
+          { positions: [ { i: 1, j: 0 }, { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 7, j: 0 }, { i: 8, j: 0 },  ], css_id: 'tinytable_css_v032blwf3hvr5u5zsv4f',}, 
+          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_12mgw9e33qap0bmtmw8r',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  styleCell_z5n8g96pbtpo6s7x4qj5(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <style>
+      /* tinytable css entries after */
+      .table td.tinytable_css_tbztowqdukj0ogi5g48u, .table th.tinytable_css_tbztowqdukj0ogi5g48u { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_4ow4lhzu6tv67dpxiifd, .table th.tinytable_css_4ow4lhzu6tv67dpxiifd { text-align: center; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_xqwollfxlygnmkd8njke, .table th.tinytable_css_xqwollfxlygnmkd8njke { text-align: center; }
+      .table td.tinytable_css_t8fpfgj522zcicuz35tk, .table th.tinytable_css_t8fpfgj522zcicuz35tk { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_ikvntk9od4bdt1spvx9w, .table th.tinytable_css_ikvntk9od4bdt1spvx9w { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_yz4cgu1apwyqmrtp5h71, .table th.tinytable_css_yz4cgu1apwyqmrtp5h71 { text-align: left; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_v032blwf3hvr5u5zsv4f, .table th.tinytable_css_v032blwf3hvr5u5zsv4f { text-align: left; }
+      .table td.tinytable_css_12mgw9e33qap0bmtmw8r, .table th.tinytable_css_12mgw9e33qap0bmtmw8r { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+    </style>
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_z5n8g96pbtpo6s7x4qj5" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
+        <thead>
+        <caption>Table 2: Lagged Regression: Do Chinese Loans Predict Future Executive Corruption?</caption>
+              <tr>
+                <th scope="col"> </th>
+                <th scope="col">(1)</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan='2'>* p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr>
+<tr><td colspan='2'>Standard errors clustered at the country level.</td></tr>
+<tr><td colspan='2'>Model includes country and year fixed effects.</td></tr>
+<tr><td colspan='2'>Source: V-Dem Dataset (v2x_execorr) and Chinese Loans to Africa Database.</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td>GDP Per Capita (Log)</td>
+                  <td>0.0808*</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>(0.0328)</td>
+                </tr>
+                <tr>
+                  <td>Log of Exports as % of GDP (Log)</td>
+                  <td>0.1564***</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>(0.0449)</td>
+                </tr>
+                <tr>
+                  <td>Log of Trade with China (Log)</td>
+                  <td>−0.0068***</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>(0.0008)</td>
+                </tr>
+                <tr>
+                  <td>Num.Obs.</td>
+                  <td>291</td>
+                </tr>
+                <tr>
+                  <td>R2</td>
+                  <td>0.936</td>
+                </tr>
+                <tr>
+                  <td>R2 Adj.</td>
+                  <td>0.931</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- postamble start -->
+  </body>
+
+</html>
+<!-- postamble end -->
+<!-- hack to avoid NA insertion in last line -->
