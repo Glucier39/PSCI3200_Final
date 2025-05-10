@@ -3,6 +3,12 @@ Working Document 3200
 
 
 Preamble
+
+
+
+
+
+
 ```{r}
 library(haven)
 library(car)
@@ -28,7 +34,19 @@ book <- read.csv("https://raw.githubusercontent.com/Glucier39/PSCI3200/refs/head
 Vdem <- read_csv("https://raw.githubusercontent.com/Glucier39/PSCI3200/refs/heads/main/data/V_Demclean.csv")
 
 ```
+
+
+
+
+
+
 Run a fixed effect regression on all of Africa as a baseline. 
+
+
+
+
+
+
 ```{r}
 
 africa_loan <- book %>%
@@ -181,9 +199,21 @@ china_trade_africa <- china_trade_africa %>%
 
 
 ```
+
+
+
+
+
+
 ChinaTrade Created 
 
 All of Africa Check
+
+
+
+
+
+
 ```{r}
 
 # "NY.GDP.PCAP.KD" "NE.EXP.GNFS.ZS" "NY.GDP.PCAP.CD" series code we want for all
@@ -278,9 +308,21 @@ comb <- comb %>%
 
 
 
+
+
+
+
+
+
 Oil Specific Data 
 
 Filter WB and Trade data down to petrolstates
+
+
+
+
+
+
 ```{r}
 
 petrolstate <- c("Algeria", "Angola", "Chad", 
@@ -300,7 +342,19 @@ petrol_trade_africa <- china_trade_africa %>%
 
 ```
 
+
+
+
+
+
+
 Cleaning Loan Data
+
+
+
+
+
+
 ```{r}
 loans_oil <- book %>% 
   mutate(
@@ -369,7 +423,6 @@ oil_agg <- oil_agg %>%
 
 ```
 
-
 ```{r}
 oil_agg$Country <-  as.factor(oil_agg$Country)
 
@@ -380,7 +433,19 @@ summary(model_oil)
 summary(model_base)
 
 ```
+
+
+
+
+
+
 Stargazer
+
+
+
+
+
+
 ```{r}
 stargazer(
   model_base, model_oil,
@@ -404,7 +469,19 @@ stargazer(
 
 
 
+
+
+
+
+
+
 Lagged Corruption
+
+
+
+
+
+
 ```{r}
 
 lag_oil <- lm(execorr_stag ~year_count  + gdp_log + expofgdp_log + trade_exp_log + Country , data = oil_agg)
@@ -417,15 +494,6 @@ summary(lag_inverse)
 
 ```
 
-
-
-
-
-
-
-
-
-
 ```{r}
 comb$Country <- as.factor(comb$Country)
 
@@ -437,7 +505,19 @@ summary(model_oil)
 ```
 
 
+
+
+
+
+
+
 All Data - may be subject to NA noise
+
+
+
+
+
+
 ```{r}
 
 comb$Country <- as.factor(comb$Country)
@@ -447,7 +527,19 @@ model_base <- lm(execorr_stag ~ year_sum + gdp_log + expofgdp_log + Country, dat
 summary(model_base)
 ```
 
+
+
+
+
+
+
 OLS Scales 
+
+
+
+
+
+
 ```{r} 
 
 
@@ -460,7 +552,19 @@ comb2009 <- comb %>%
 model2009 <- lm(execorr_stag ~ year_count + year_sum + gdp_log + expofgdp_log + Country, data = comb2009)
 summary(model2009)
 ```
+
+
+
+
+
+
 Corruption Over Time
+
+
+
+
+
+
 ```{r}
 ggplot(oil_vdem, aes(x = year, y = v2x_corr, color = country_name)) +
   geom_point(alpha = 0.5) +
@@ -492,8 +596,20 @@ ggplot(vdem_2009, aes(x = year, y = v2x_corr, color = country_name)) +
 
 
 
+
+
+
+
+
+
 Load in
 China trade dependency
+
+
+
+
+
+
 ```{r, echo=FALSE, message=FALSE, warning=FALSE,}
 ?tradestatistics
 
@@ -560,6 +676,4 @@ comb <- comb %>%
 
 colnames(comb)
 ```
-
-
 
