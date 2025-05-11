@@ -80,13 +80,13 @@ A lagged regression serves as a valuable empirical extension because it introduc
 ### Chinese Loans -> Executive Corruption in 2 Years
 
 \begin{equation}
-\text{ExecCorr}_{it} = \beta_1 \cdot \text{Loans}_{it} + \beta_2 \cdot \text{GDP}_{it} + \beta_3 \cdot \text{Exports}_{it} + \beta_4 \cdot \text{Trade}_{it} + \alpha_i + \gamma_t + \epsilon_{it}
+\text{Lagged ExecCorr}_{it} = \beta_1 \cdot \text{Loans}_{it} + \beta_2 \cdot \text{GDP}_{it} + \beta_3 \cdot \text{Exports}_{it} + \beta_4 \cdot \text{Trade}_{it} + \alpha_i + \gamma_t + \epsilon_{it}
 \end{equation}
 
 ### Executive Corruption -> Chinese Loans in 2 Years
 
 \begin{equation}
-\text{Loans}_{it} = \beta_1 \cdot \text{ExecCorr}_{it} + \beta_2 \cdot \text{GDP}_{it} + \beta_3 \cdot \text{Exports}_{it} + \beta_4 \cdot \text{Trade}_{it} + \alpha_i + \gamma_t + \epsilon_{it}
+\text{Lagged Loans}_{it} = \beta_1 \cdot \text{ExecCorr}_{it} + \beta_2 \cdot \text{GDP}_{it} + \beta_3 \cdot \text{Exports}_{it} + \beta_4 \cdot \text{Trade}_{it} + \alpha_i + \gamma_t + \epsilon_{it}
 \end{equation}
 
 #### Notation
@@ -99,7 +99,6 @@ A lagged regression serves as a valuable empirical extension because it introduc
 
 If previous loan levels significantly predict future corruption, this suggests that loans may be shaping governance outcomes over time. Conversely, we can also test the reverse by lagging the dependent variable—executive corruption—to see whether past corruption levels predict future loan volumes. If this relationship is weak or insignificant while the first is strong, it strengthens the case for a causal effect running from loans to corruption. This strategy helps rule out simultaneity, where both variables move together for unrelated reasons, and provides a clearer test of directionality, enhancing the credibility of the original hypothesis.
 
-<iframe src="data/lagged_models.html" width="100%" height="600px" style="border: none;"></iframe>
 
 ## Regression Results
 
@@ -120,5 +119,19 @@ If previous loan levels significantly predict future corruption, this suggests t
 :::
 
 :::
+
+After running both the regressions for the emperical extension, I realized that my initial hypothesis that Chinese loans cause corruption was false. Rather, assuming other confounders are negligible higher levels of executive corruption cause an increase in Chinese loan commitments. The first regression estimates the effect of yearly Chinese loan counts on executive corruption two years later, while the second examines whether earlier levels of executive corruption predict future loan activity. In the first model, the coefficient on loan count is small and statistically insignificant, suggesting that an increase in Chinese lending does not significantly affect future levels of executive corruption when controlling for GDP per capita, export intensity, and trade with China. However, in the second regression, the coefficient on executive corruption is large, positive, and highly statistically significant (β = 3176.01, p < 0.001). This indicates that higher levels of executive corruption are associated with a substantial increase in the number of Chinese loans received two years later. 
+
+# Discussion and Policy Implications 
+The results of this final project suggest that, in contrast with my initial hypothesis, executive corruption is actually the driving cause of higher Chinese loan volumes within African petrostates. This finding aligns more closely with theories from the resource curse literature, which argue that weak institutions and elite capture - not necessarily external economic influences - are what shape the allocation of foreign financing. Ultimately, this is nothing new. Initially, a fixed effects regression showed a statistically significant relationship between Chinese loans and higher levels of executive corruption. While I was suprised to see any impact at all, the marginal effect size coming out as a 0.0038 increase on a 0–1 scale per loan—raising questions about the practical significance of the finding.
+
+When I lagged both variables and performed another fixed effect regression, the results were much stronger and much more statistically significant. Despite this, I still have to recognize that this causal relationship is very limited. First, as seen by the scatter plots, this relationship is being heavily skewed by an insane amount of Chinese financing within Angola. Across all African states, Angola is an outlier because of how much more it receives. 
+
+![Yearly Loan Count by Country.](data/AngolaSpike.png)
+Moreover, although lagging the variables introduces temporal ordering, it doesn’t fully rule out all endogeneity concerns, especially if unobserved, time-varying confounders are still influencing both governance quality and loan inflows. Additionally, the relatively weak predictive power of trade volume with China and GDP per capita in some models highlights that other political or strategic factors may be driving China’s lending decisions, rather than purely economic fundamentals. Finally, while Boston University's Global Development Policy Center is a very well trusted organization, a lot of these loans are still going unnoticed or unttracked due to their shady nature. If the data set was created by an omniscient being who could see every single Chinese loan, I'm sure the results would be fundamentally different. 
+
+Still, these results offer meaningful insights for both researchers and policymakers. For scholars, it adds to the literature by stating how Chinese backed lending isn't a cause of more corruption but rather that these loans flow in contexts where accountability is already weak. For policymakers in the development context, these findings suggest a shift in focus: rather than primarily scrutinizing where China is directing its loans or trying to determine whether they are predatory or not, a reinforced emphasis should be on strengthening institutional resilience in countries already exhibiting high levels of executive corruption. If corruption drives loan inflows, then the real policy challenge lies in preventing governance backsliding once funding arrives. By reemphasizing and prioritizing these transparency initiatives, anti-corruption enforcement, and civil society oversight in high-risk states, I can see good work being done to help combat the negative impact of resource curse on these countries. 
+
+
 
 

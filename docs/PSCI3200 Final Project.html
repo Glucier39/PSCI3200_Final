@@ -241,8 +241,6 @@ window.Quarto = {
 <li><span class="math inline">\(\epsilon_{it}\)</span>: Error term</li>
 </ul>
 <p>If previous loan levels significantly predict future corruption, this suggests that loans may be shaping governance outcomes over time. Conversely, we can also test the reverse by lagging the dependent variable—executive corruption—to see whether past corruption levels predict future loan volumes. If this relationship is weak or insignificant while the first is strong, it strengthens the case for a causal effect running from loans to corruption. This strategy helps rule out simultaneity, where both variables move together for unrelated reasons, and provides a clearer test of directionality, enhancing the credibility of the original hypothesis.</p>
-<iframe src="data/lagged_models.html" width="100%" height="600px" style="border: none;">
-</iframe>
 </section>
 </section>
 <section id="regression-results" class="level2">
@@ -268,9 +266,13 @@ window.Quarto = {
 </div>
 </div>
 </div>
-
-
+<p>After running both the regressions for the emperical extension, I realized that my initial hypothesis that Chinese loans cause corruption was false. Rather, assuming other confounders are negligible higher levels of executive corruption cause an increase in Chinese loan commitments. The first regression estimates the effect of yearly Chinese loan counts on executive corruption two years later, while the second examines whether earlier levels of executive corruption predict future loan activity. In the first model, the coefficient on loan count is small and statistically insignificant, suggesting that an increase in Chinese lending does not significantly affect future levels of executive corruption when controlling for GDP per capita, export intensity, and trade with China. However, in the second regression, the coefficient on executive corruption is large, positive, and highly statistically significant (β = 3176.01, p &lt; 0.001). This indicates that higher levels of executive corruption are associated with a substantial increase in the number of Chinese loans received two years later.</p>
 </section>
+</section>
+<section id="section" class="level1">
+<h1></h1>
+
+
 </section>
 
 </main> <!-- /main -->

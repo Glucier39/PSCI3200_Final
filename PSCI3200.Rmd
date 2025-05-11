@@ -6,10 +6,12 @@ Preamble
 ```{r}
 library(haven)
 library(car)
+library(gt)
 library(fixest)
 library(tidyverse)
 library(readr)
 library(tradestatistics)
+library(plotly)
 library(scales)
 library(stringr)
 library(fixest)
@@ -17,7 +19,9 @@ library(httr)
 library(jsonlite)
 library(dplyr)
 library(purrr)
+library(cowplot)
 library(comtradr)
+library(modelsummary)
 library(stargazer)
 
 book <- read.csv("https://raw.githubusercontent.com/Glucier39/PSCI3200/refs/heads/main/data/how_china_lends_dataset_version_1_0__test/CLA-Database-Raw-Data-Public-2024-FIN.csv")
@@ -335,14 +339,20 @@ oil_agg <- left_join(wb_petrol, oil_agg, by = c("Country Name" = "Country", "Yea
 oil_agg <- left_join(oil_agg, petrol_trade_africa, by = c("Country Name" = "Country", "Year" = "year"))
 
 oil_agg$Year <- as.numeric(oil_agg$Year)
-oil_agg$execorr_stag <- sapply(oil_agg$Year, function(y) {
-  match_row <- oil_vdem[oil_vdem$year == y + 1, ] # arb lag 
+
+
+
+oil_agg$execorr_stag <- mapply(function(cn, y) {
+  match_row <- oil_vdem[oil_vdem$country_name == cn & oil_vdem$year == y + 2, ] # function to stagger loans by an arb amount of time 
   if (nrow(match_row) > 0) {
     return(match_row$v2x_execorr[1])
   } else {
-    return(NA)
-  }
-})
+    return(NA) # this tests the impact of loans in y on executive corruption y + 1 later 
+  } # the reverse of this would test the impact of executive courruption on loans  y + 1 later
+}, oil_agg$`Country Name`, oil_agg$Year) 
+
+
+
 
 oil_agg <- oil_agg %>% # creating log functions
   rename(Exp_of_GDP = `Exports of goods and services (% of GDP)`, GDP_percapita = `GDP per capita (current US$)`) %>% 
@@ -364,7 +374,15 @@ oil_agg <- oil_agg %>%
 
 
 #### for COMB - do not touch 
-
+# separate function to stagger year sums once created
+oil_agg$year_sum_stag <- mapply(function(cn, y) {
+  match_row <- oil_agg[oil_agg$Country == cn & oil_agg$Year == y + 2, ]
+  if (nrow(match_row) > 0) {
+    return(match_row$year_sum[1]) 
+  } else {
+    return(NA)
+  }
+}, oil_agg$Country, oil_agg$Year)
 
 
 ```
@@ -401,170 +419,370 @@ stargazer(
   star.cutoffs   = c(0.05, 0.01, 0.001)
 )
 ```
+#modelsummary
+```{r}
+models <- list(
+  "Africa" = model_base,
+  "Petrolstate" = model_oil
+)
 
+# Generate HTML table without a built-in title
+modelsummary(
+  models,
+  output = "~/Documents/GitHub/PSCI3200_Final/data/main_models.html",
+  coef_map = c(
+    "year_count" = "Yearly Loan Count",
+    "gdp_log" = "GDP Per Capita (Log)",
+    "expofgdp_log" = "Log of Exports as % of GDP (Log)",
+    "trade_exp_log" = "Log of Trade with China (Log)"
+  ),
+  gof_omit = "R2_adj|AIC|BIC|Log.Lik|RMSE|Std.Errors|F|SER",
+  stars = c("*" = .05, "**" = .01, "***" = .001),
+  fmt = 4,
+  notes = list(
+    "Standard errors clustered at the country level.",
+    "All models include country and year fixed effects.",
+    "Source: V-Dem Dataset (v2x_execorr) and Boston University Chinese Loans to Africa (CLA) Database."
+  )
+)
 
-
-
+```
 
 
 Lagged Corruption
 ```{r}
-oil_agg$Year <-  as.factor(oil_agg$Year)
+oil_inverse <- oil_agg # create dummy dataset
+oil_inverse$Year <-  as.factor(oil_inverse$Year)
 
-lag_oil <- lm(execorr_stag ~year_count  + gdp_log + expofgdp_log + trade_exp_log + Country + factor(Year), data = oil_agg)
-lag_inverse <- lm(year_count ~ execorr_stag + gdp_log + expofgdp_log + trade_exp_log + Country + factor(Year), data = oil_agg)
+lag_oil <- lm(execorr_stag ~ year_count  + gdp_log + expofgdp_log + trade_exp_log+ Country + Year, data = oil_inverse)
+lag_inverse <- lm(year_sum_stag ~ v2x_execorr + gdp_log + expofgdp_log + trade_exp_log  + Country + Year, data = oil_inverse)
 
 summary(lag_oil)
 summary(lag_inverse)
 
-unique(oil_agg$Country)
+
 
 
 ```
-
-
-
-
-
-
-
-
-
-
+Table for Lagged Regressions
 ```{r}
-comb$Country <- as.factor(comb$Country)
-
-
-colnames(comb)
-# Run the regression with Country fixed effects
-model_base <- lm(execorr_stag ~ year_count + Country + Exp_of_GDP + trade_exp_logGDP_percapita, data = comb)
-summary(model_oil)
-```
-
-
-All Data - may be subject to NA noise
-```{r}
-
-comb$Country <- as.factor(comb$Country)
-
-# Run the regression with Country fixed effects
-model_base <- lm(execorr_stag ~ year_sum + gdp_log + expofgdp_log + Country, data = comb)
-summary(model_base)
-```
-
-OLS Scales 
-```{r} 
-
-
-comb$Year <- as.numeric(comb$Year)
-
-
-comb2009 <- comb %>%
-  filter(Year > 2009) # incorporate everything post-2009 when changes start to happen
-
-model2009 <- lm(execorr_stag ~ year_count + year_sum + gdp_log + expofgdp_log + Country, data = comb2009)
-summary(model2009)
-```
-Corruption Over Time
-```{r}
-ggplot(oil_vdem, aes(x = year, y = v2x_corr, color = country_name)) +
-  geom_point(alpha = 0.5) +
-  geom_smooth(method = "lm", se = TRUE, color = "steelblue") +
-  labs(
-    title = "Executive Corruption Over Time",
-    x = "Year",
-    y = "Executive Corruption (v2x_execorr, lagged 2 years)"
-  ) +
-  theme_minimal() +
-  facet_wrap("country_name")
-```
-
-```{r}
-vdem_2009 <- oil_vdem %>% filter(year >= 2009)
-
-ggplot(vdem_2009, aes(x = year, y = v2x_corr, color = country_name)) +
-  geom_point(alpha = 0.5) +
-  geom_smooth(method = "lm", se = TRUE, color = "steelblue") +
-  labs(
-    title = "Executive Corruption Over Time",
-    x = "Year",
-    y = "Executive Corruption (v2x_execorr, lagged 2 years)"
-  ) +
-  theme_minimal() +
-  facet_wrap("country_name")
-```
-
-
-
-
-Load in
-China trade dependency
-```{r, echo=FALSE, message=FALSE, warning=FALSE,}
-?tradestatistics
-
-africa_iso3 <- c("dza", "ago", "cmr", "tcd", "cog", "cod", "egy", "gnq", 
-                 "gab", "gha", "mrt", "nga", "ssd", "sdn", "tun", "uga")
-
-china_trade_africa <- purrr::map_dfr(
-  africa_iso3,
-  ~ ots_create_tidy_data(
-    years = 2000:2021,   # use only available years
-    reporters = .x,
-    partners = "chn",
-    table = "yrp"
+# Create a named list of models
+modelsummary(
+  lag_oil,  # replace with your model object name
+  output = "~/Documents/GitHub/PSCI3200_Final/data/lag_oil_model.html",
+  title = "Table X: OLS Regression of Chinese Loans (t) on Executive Corruption (t+2)",
+  coef_map = c(
+    "year_count"     = "Yearly Chinese Loan Count",
+    "gdp_log"        = "GDP per Capita (Log, USD 2015)",
+    "expofgdp_log"   = "Exports as % of GDP (Log)",
+    "trade_exp_log"  = "Trade with China (Log, USD)"
+  ),
+  gof_omit = "R2_adj|AIC|BIC|Log.Lik|RMSE|Std.Errors|F|SER",
+  stars = c("*" = .05, "**" = .01, "***" = .001),
+  fmt = 4,
+  notes = list(
+    "Fixed (Year, Country) effects included.",
+    "Source: V-Dem Dataset and Chinese Loans to Africa Database."
   )
 )
 
-china_trade_africa <- china_trade_africa %>%
-  mutate(
-    reporter_iso = tolower(reporter_iso),  # just in case it's uppercase
-    country_name = case_when(
-      reporter_iso == "dza" ~ "Algeria",
-      reporter_iso == "ago" ~ "Angola",
-      reporter_iso == "cmr" ~ "Cameroon",
-      reporter_iso == "tcd" ~ "Chad",
-      reporter_iso == "cog" ~ "Republic of the Congo",
-      reporter_iso == "cod" ~ "Democratic Republic of the Congo",
-      reporter_iso == "egy" ~ "Egypt",
-      reporter_iso == "gnq" ~ "Equatorial Guinea",
-      reporter_iso == "gab" ~ "Gabon",
-      reporter_iso == "gha" ~ "Ghana",
-      reporter_iso == "mrt" ~ "Mauritania",
-      reporter_iso == "nga" ~ "Nigeria",
-      reporter_iso == "ssd" ~ "South Sudan",
-      reporter_iso == "sdn" ~ "Sudan",
-      reporter_iso == "tun" ~ "Tunisia",
-      reporter_iso == "uga" ~ "Uganda",
-      TRUE ~ NA_character_
-    ),
-    trade_value_usd_exp = ifelse(is.na(trade_value_usd_exp), 0, trade_value_usd_exp)
-  ) %>%
-  rename(Country = country_name) %>%
-  select(Country, trade_value_usd_exp, year)
-
-comb <- left_join(comb, china_trade_africa, by = c("Country" = "Country", "Year" = "year"))
+modelsummary(
+  lag_inverse,  # replace with your model object name
+  output = "~/Documents/GitHub/PSCI3200_Final/data/lag_inverse_model.html",
+  title = "Table X: OLS Regression of Executive Corruption (t) on Chinese Loans (t+2) (2000–2021)",
+  coef_map = c(
+    "v2x_execorr"     = "Executive Corruption",
+    "gdp_log"        = "GDP per Capita (Log, USD 2015)",
+    "expofgdp_log"   = "Exports as % of GDP (Log)",
+    "trade_exp_log"  = "Trade with China (Log, USD)"
+  ),
+  gof_omit = "R2_adj|AIC|BIC|Log.Lik|RMSE|Std.Errors|F|SER",
+  stars = c("*" = .05, "**" = .01, "***" = .001),
+  fmt = 4,
+  notes = list(
+    "Fixed (Year, Country) effects included.",
+    "Source: V-Dem Dataset and Chinese Loans to Africa Database."
+  )
+)
 
 
-
-
-comb <- comb %>% # creating log functions
-   rename(gdp_per_cap = `GDP per capita (current US$)`, export_of_gdp = `Exports of goods and services (% of GDP)`) %>%
-  mutate(gdp_per_cap = as.numeric(gdp_per_cap),
-        export_of_gdp = as.numeric(export_of_gdp)) %>%
-  mutate(gdp_log = log(gdp_per_cap),
-         expofgdp_log = log(export_of_gdp),
-         trade_exp_log = log(trade_value_usd_exp))
-  
-  
-comb$trade_exp_log<- ifelse(comb$trade_exp_log == "-Inf", 0, comb$trade_exp_log)
-
-comb <- comb %>%
-  group_by(Year, Country) %>%
-  mutate(year_sum = sum(as.numeric(Loan..USD.M.)),
-         year_sum = ifelse(is.na(year_sum), 0, year_sum) )
-
-colnames(comb)
 ```
 
+GT 
+```{r}
+oil_stats <- oil_agg %>%
+  select(Year, v2x_execorr, year_count, 
+         GDP_percapita, Exp_of_GDP, trade_value_usd_exp) %>%
+  mutate(Year = factor(Year)) %>% 
+  group_by(Year) %>%
+  summarise(
+    execorr_min = min(v2x_execorr, na.rm = TRUE),
+    execorr_median = median(v2x_execorr, na.rm = TRUE),
+    execorr_max = max(v2x_execorr, na.rm = TRUE),
+
+    loan_min = min(year_count, na.rm = TRUE),
+    loan_median = median(year_count, na.rm = TRUE),
+    loan_max = max(year_count, na.rm = TRUE),
+
+    gdp_min = min(GDP_percapita, na.rm = TRUE),
+    gdp_median = median(GDP_percapita, na.rm = TRUE),
+    gdp_max = max(GDP_percapita, na.rm = TRUE),
+
+    exp_min = min(Exp_of_GDP, na.rm = TRUE),
+    exp_median = median(Exp_of_GDP, na.rm = TRUE),
+    exp_max = max(Exp_of_GDP, na.rm = TRUE),
+
+    trade_min = min(trade_value_usd_exp, na.rm = TRUE),
+    trade_median = median(trade_value_usd_exp, na.rm = TRUE),
+    trade_max = max(trade_value_usd_exp, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+
+oil_stats %>%
+  gt() %>%
+  fmt_number(
+    columns = where(is.numeric),
+    decimals = 2
+  ) %>%
+  tab_header(
+    title = md("**Summary Statistics of Key Variables by Year**"),
+    subtitle = "Five-number summaries for Chinese loans, corruption, and trade/economic indicators"
+  ) %>%
+  cols_label(
+    execorr_min = "Min",
+    execorr_median = "Median",
+    execorr_max = "Max",
+    
+    loan_min = "Min",
+    loan_median = "Median",
+    loan_max = "Max",
+    
+    gdp_min = "Min",
+    gdp_median = "Median",
+    gdp_max = "Max",
+    
+    exp_min = "Min",
+    exp_median = "Median",
+    exp_max = "Max",
+    
+    trade_min = "Min",
+    trade_median = "Median",
+    trade_max = "Max"
+  ) %>%
+  tab_spanner(
+    label = md("**Executive Corruption** (Index: 0–1)"),
+    columns = c(execorr_min, execorr_median, execorr_max)
+  ) %>%
+  tab_spanner(
+    label = md("**Chinese Loans** (Count)"),
+    columns = c(loan_min, loan_median, loan_max)
+  ) %>%
+  tab_spanner(
+    label = md("**GDP per Capita** (USD, 2015)"),
+    columns = c(gdp_min, gdp_median, gdp_max)
+  ) %>%
+  tab_spanner(
+    label = md("**Exports as % of GDP**"),
+    columns = c(exp_min, exp_median, exp_max)
+  ) %>%
+  tab_spanner(
+    label = md("**Trade With China** (USD)"),
+    columns = c(trade_min, trade_median, trade_max)
+  ) %>%
+  tab_options(
+    table.font.size = "small",
+    heading.align = "center"
+  ) %>%
+opt_stylize(style = 4) %>% # for example
+   tab_style(
+    style = cell_borders(
+      sides = "left",
+      weight = px(2),
+      color = "black"
+    ),
+    locations = list(
+      cells_body(columns = loan_min),
+      cells_body(columns = gdp_min),
+      cells_body(columns = exp_min),
+      cells_body(columns = trade_min)
+    ))
+  
+```
+
+
+```{r}
+oil_stats <- oil_agg %>%
+  select(Year, v2x_execorr, year_count, 
+         GDP_percapita, Exp_of_GDP, trade_value_usd_exp) %>%
+  group_by(Year) %>%
+  summarise(
+    execorr_mean = mean(v2x_execorr, na.rm = TRUE),
+    execorr_sd = sd(v2x_execorr, na.rm = TRUE),
+    execorr_min = min(v2x_execorr, na.rm = TRUE),
+    execorr_max = max(v2x_execorr, na.rm = TRUE),
+
+    loan_mean = mean(year_count, na.rm = TRUE),
+    loan_sd = sd(year_count, na.rm = TRUE),
+    loan_min = min(year_count, na.rm = TRUE),
+    loan_max = max(year_count, na.rm = TRUE),
+
+    gdp_mean = mean(GDP_percapita, na.rm = TRUE),
+    gdp_sd = sd(GDP_percapita, na.rm = TRUE),
+    gdp_min = min(GDP_percapita, na.rm = TRUE),
+    gdp_max = max(GDP_percapita, na.rm = TRUE),
+
+    exp_mean = mean(Exp_of_GDP, na.rm = TRUE),
+    exp_sd = sd(Exp_of_GDP, na.rm = TRUE),
+    exp_min = min(Exp_of_GDP, na.rm = TRUE),
+    exp_max = max(Exp_of_GDP, na.rm = TRUE),
+
+    trade_mean = mean(trade_value_usd_exp, na.rm = TRUE),
+    trade_sd = sd(trade_value_usd_exp, na.rm = TRUE),
+    trade_min = min(trade_value_usd_exp, na.rm = TRUE),
+    trade_max = max(trade_value_usd_exp, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+oil_table <- gt(oil_stats) %>%
+  fmt_number(columns = where(is.numeric), decimals = 3) %>%
+  tab_header(
+    title = md("**Summary Statistics by Year**"),
+    subtitle = "Includes Mean, Standard Deviation, Min, and Max of Key Variables"
+  ) %>%
+  tab_spanner(label = md("**Executive Corruption** (Index 0–1)"),
+              columns = c(execorr_mean, execorr_sd, execorr_min, execorr_max)) %>%
+  tab_spanner(label = md("**Chinese Loans** (Count)"),
+              columns = c(loan_mean, loan_sd, loan_min, loan_max)) %>%
+  tab_spanner(label = md("**GDP per Capita** (USD, 2015)"),
+              columns = c(gdp_mean, gdp_sd, gdp_min, gdp_max)) %>%
+  tab_spanner(label = md("**Exports as % of GDP**"),
+              columns = c(exp_mean, exp_sd, exp_min, exp_max)) %>%
+  tab_spanner(label = md("**China Trade** (USD)"),
+              columns = c(trade_mean, trade_sd, trade_min, trade_max)) %>%
+  tab_options(table.font.size = "small", heading.align = "center") %>%
+  opt_stylize(style = 2) %>% 
+   cols_label(
+    execorr_mean = "Mean",
+    execorr_sd = "SD",
+    execorr_min = "Min",
+    execorr_max = "Max",
+    
+    loan_mean = "Mean",
+    loan_sd = "SD",
+    loan_min = "Min",
+    loan_max = "Max",
+    
+    gdp_mean = "Mean",
+    gdp_sd = "SD",
+    gdp_min = "Min",
+    gdp_max = "Max",
+    
+    exp_mean = "Mean",
+    exp_sd = "SD",
+    exp_min = "Min",
+    exp_max = "Max",
+    
+    trade_mean = "Mean",
+    trade_sd = "SD",
+    trade_min = "Min",
+    trade_max = "Max"
+  ) 
+
+
+ oil_table 
+
+# Save to HTML file
+gtsave(oil_table, "~/Documents/GitHub/PSCI3200_Final/data/summary_table_oil.html")
+```
+
+
+
+```{r}
+
+africa_model_data <- comb_model_data %>%
+  mutate(group = "All African States")
+
+petro_model_data <- comb_model_data %>%
+  filter(Country %in% petrolstate) %>%
+  mutate(group = "Petrostates")
+
+
+
+  # All Africa plot
+africa_plot <- ggplot(africa_model_data, aes(x = year_count, y = v2x_execorr)) +
+  geom_point(alpha = 0.5, size = 1.5, color = "black") +
+  geom_smooth(method = "lm", se = TRUE, color = "#1f77b4", size = 1.2) +
+  labs(
+    title = "Chinese Lending and Executive Corruption",
+    subtitle = "All African States (2000–2021)",
+    x = "Yearly Chinese Loan Count",
+    y = "Executive Corruption (0–1)"
+  ) +
+  theme_minimal(base_size = 14) + theme(
+  plot.background = element_rect(fill = "white", color = NA)
+)
+
+
+# Petrostate-only plot
+petro_plot <- ggplot(petro_model_data, aes(x = year_count, y = v2x_execorr)) +
+  geom_point(alpha = 0.5, size = 1.5, color = "black") +
+  geom_smooth(method = "lm", se = TRUE, color = "#d62728", size = 1.2) +
+  labs(
+    title = "Chinese Lending and Executive Corruption",
+    subtitle = "Petrostates Only (2000–2021)",
+    x = "Yearly Chinese Loan Count",
+    y = "Executive Corruption (0–1)"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+  plot.background = element_rect(fill = "white", color = NA)
+)
+
+
+combined_plot <- plot_grid(
+  africa_plot,
+  petro_plot,
+  labels = c("A", "B"),
+  label_size = 14,
+  ncol = 2,
+  align = "v"
+)
+
+# Optionally add a caption below
+title <- ggdraw() + draw_label(
+ "Source: V-Dem, Boston Univeristy CLA Database",
+  fontface = 'italic',
+  x = 0,
+  hjust = 0,
+  size = 12
+)
+
+# Combine title + plot
+final_figure <- plot_grid(title, combined_plot, ncol = 1, rel_heights = c(0.1, 1))
+
+# View
+print(final_figure)
+
+ggsave("~/Documents/GitHub/PSCI3200_Final/data/combined_execorr_plot.png", final_figure, width = 14, height = 6, dpi = 300)
+
+```
+Loan Quantity to Show Angola 
+```{r}
+ggplot(oil_agg %>% filter(!is.na(year_count), !is.na(Year)), 
+       aes(x = Year, y = year_count, color = Country, group = Country)) +
+  geom_line(size = 1) +
+  labs(
+    title = "Chinese Loan by Country Over Time",
+    subtitle = "Tracking Chinese loan exposure over time (2009–2020)",
+    x = "Year",
+    y = "Loan Quantity",
+    color = "Country",
+    caption = "Note: year_count represents the number of years since each country's first major Chinese loan."
+  ) +
+  theme_minimal()
+
+
+```
 
 
