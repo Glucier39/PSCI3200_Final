@@ -192,9 +192,13 @@ All of Africa Check
 wb_afr <- read_csv("https://raw.githubusercontent.com/Glucier39/PSCI3200/refs/heads/main/data/P_Data_Extract_From_World_Development_Indicators/f0605784-f9bc-44f6-84f5-b92ef7aa8e10_Data.csv")
 
 
+# Convert year columns (e.g., "2000", "2001", etc.) to character to prepare for pivoting
 wb_clean <- wb_afr %>%
   mutate(across(matches("^[0-9]{4}"), as.character))
 
+# Pivot the data from wide to long format
+# 'names_to = "Year"' turns column names like "2000" into values in a new "Year" column
+# 'values_to = "Value"' takes the corresponding cell values and puts them in a "Value" column
 wb_clean <- wb_clean %>%
   pivot_longer(
     cols = matches("^[0-9]{4}"),
@@ -202,7 +206,7 @@ wb_clean <- wb_clean %>%
     values_to = "Value"
   )
 
-
+# Filter the dataset to keep only rows with specific Series Name values
 wb_clean <- wb_clean %>%
   filter(`Series Name` %in% c(
     "GDP per capita (constant 2015 US$)",
@@ -210,7 +214,7 @@ wb_clean <- wb_clean %>%
     "GDP per capita (current US$)"
   ))
 
-# Step 3: Pivot wider so each indicator becomes a column
+#Pivot wider so each indicator becomes a column
 wb_clean <- wb_clean %>%
   select(`Country Name`, Year, `Series Name`, Value) %>%
   pivot_wider(
@@ -222,7 +226,7 @@ wb_clean <- wb_clean %>%
 
 
 wb_vdem <- left_join(wb_clean, africa_vdem, by = c("Country Name" = "country_name", "Year" = "year")) %>%
-  filter(!is.na(v2x_execorr))
+  filter(!is.na(v2x_execorr)) # Join together 
 
 
 africa_loan
