@@ -4,7 +4,7 @@ Working Document 3200
 
 Preamble
 ```{r}
-library(haven)
+library(haven) # All the libraries I will need 
 library(car)
 library(gt)
 library(fixest)
@@ -23,12 +23,10 @@ library(cowplot)
 library(comtradr)
 library(modelsummary)
 library(stargazer)
-
+# Chinese Loans
 book <- read.csv("https://raw.githubusercontent.com/Glucier39/PSCI3200/refs/heads/main/data/how_china_lends_dataset_version_1_0__test/CLA-Database-Raw-Data-Public-2024-FIN.csv")
+#Dataset
 
-
- # V_Dem_CY_Full_Others_v14 <- read_csv("Documents/PSCI3200/data/how_china_lends_dataset_version_1_0__test/V-Dem-CY-FullOthers-v14_csv_YyKfizl/V-Dem-CY-Full+Others-v14.csv")
- # 
 Vdem <- read_csv("https://raw.githubusercontent.com/Glucier39/PSCI3200/refs/heads/main/data/V_Demclean.csv")
 
 ```
@@ -36,7 +34,7 @@ Run a fixed effect regression on all of Africa as a baseline.
 ```{r}
 
 africa_loan <- book %>%
-  filter(Region == "Africa")
+  filter(Region == "Africa") # Get Unique Countries 
 
 africa_countries <- c(
   "Algeria", "Angola", "Benin", "Botswana", "Burkina Faso", "Burundi",
@@ -52,7 +50,7 @@ africa_countries <- c(
 )
 
 africa_vdem <- Vdem %>% 
-  filter(country_name %in% africa_countries)
+  filter(country_name %in% africa_countries) # Filter Vdem to Africa. VDem was pre-filtered to only be corruption indexs so that it would fit on my github
 ```
 
 ```{r, warning = FALSE, message = FALSE}
@@ -117,7 +115,7 @@ china_trade_africa <- purrr::map_dfr(
       partners  = "chn",
       table     = "yrp"
     )
-)
+) # getting trade with China data 
 
 china_trade_africa <- china_trade_africa %>%
   mutate(
@@ -174,7 +172,7 @@ china_trade_africa <- china_trade_africa %>%
       reporter_iso == "syc" ~ "Seychelles",
       reporter_iso == "ssd" ~ "South Sudan",
       TRUE ~ NA_character_
-    ),
+    ), # rename every country
     
     # replace missing exports with zero
     trade_value_usd_exp = if_else(is.na(trade_value_usd_exp), 0, trade_value_usd_exp)
@@ -774,11 +772,10 @@ ggplot(oil_agg %>% filter(!is.na(year_count), !is.na(Year)),
   geom_line(size = 1) +
   labs(
     title = "Chinese Loan by Country Over Time",
-    subtitle = "Tracking Chinese loan exposure over time (2009–2020)",
+    subtitle = "Tracking Chinese loan exposure over time (2000-2023)",
     x = "Year",
     y = "Loan Quantity",
     color = "Country",
-    caption = "Note: year_count represents the number of years since each country's first major Chinese loan."
   ) +
   theme_minimal()
 
