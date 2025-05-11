@@ -1,5 +1,6 @@
 ---
 title: "PSCI3200 Final Project"
+author: "Geddy Lucier"
 institute: "University of Pennsylvania"
 bibliography: references.bib
 ---
