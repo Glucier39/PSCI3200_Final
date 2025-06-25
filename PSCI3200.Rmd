@@ -1,8 +1,7 @@
-Geddy Lucier
-Working Document 3200 
-
+Geddy Lucier Working Document 3200
 
 Preamble
+
 ```{r}
 library(haven) # All the libraries I will need 
 library(car)
@@ -30,7 +29,9 @@ book <- read.csv("https://raw.githubusercontent.com/Glucier39/PSCI3200/refs/head
 Vdem <- read_csv("https://raw.githubusercontent.com/Glucier39/PSCI3200/refs/heads/main/data/V_Demclean.csv")
 
 ```
-Run a fixed effect regression on all of Africa as a baseline. 
+
+Run a fixed effect regression on all of Africa as a baseline.
+
 ```{r}
 
 africa_loan <- book %>%
@@ -183,9 +184,11 @@ china_trade_africa <- china_trade_africa %>%
 
 
 ```
-ChinaTrade Created 
+
+ChinaTrade Created
 
 All of Africa Check
+
 ```{r}
 
 # "NY.GDP.PCAP.KD" "NE.EXP.GNFS.ZS" "NY.GDP.PCAP.CD" series code we want for all
@@ -282,11 +285,10 @@ comb <- comb %>%
 
 ```
 
-
-
-Oil Specific Data 
+Oil Specific Data
 
 Filter WB and Trade data down to petrolstates
+
 ```{r}
 
 petrolstate <- c("Algeria", "Angola", "Chad", 
@@ -307,6 +309,7 @@ petrol_trade_africa <- china_trade_africa %>%
 ```
 
 Cleaning Loan Data
+
 ```{r}
 loans_oil <- book %>% 
   mutate(
@@ -389,7 +392,6 @@ oil_agg$year_sum_stag <- mapply(function(cn, y) {
 
 ```
 
-
 ```{r}
 oil_agg$Country <-  as.factor(oil_agg$Country)
 oil_agg$Year <-  as.factor(oil_agg$Year)
@@ -403,7 +405,9 @@ summary(model_oil)
 summary(model_base)
 
 ```
+
 Stargazer
+
 ```{r}
 stargazer(
   model_base, model_oil,
@@ -421,7 +425,9 @@ stargazer(
   star.cutoffs   = c(0.05, 0.01, 0.001)
 )
 ```
+
 #modelsummary
+
 ```{r}
 models <- list(
   "Africa" = model_base,
@@ -450,8 +456,8 @@ modelsummary(
 
 ```
 
-
 Lagged Corruption
+
 ```{r}
 oil_inverse <- oil_agg # create dummy dataset
 oil_inverse$Year <-  as.factor(oil_inverse$Year)
@@ -466,7 +472,9 @@ summary(lag_inverse)
 
 
 ```
+
 Table for Lagged Regressions
+
 ```{r}
 # Create a named list of models
 modelsummary(
@@ -510,7 +518,8 @@ modelsummary(
 
 ```
 
-GT 
+GT
+
 ```{r}
 oil_stats <- oil_agg %>%
   select(Year, v2x_execorr, year_count, 
@@ -612,7 +621,6 @@ opt_stylize(style = 4) %>% # for example
   
 ```
 
-
 ```{r}
 oil_stats <- oil_agg %>%
   select(Year, v2x_execorr, year_count, 
@@ -698,8 +706,6 @@ oil_table <- gt(oil_stats) %>%
 gtsave(oil_table, "~/Documents/GitHub/PSCI3200_Final/data/summary_table_oil.html")
 ```
 
-
-
 ```{r}
 
 africa_model_data <- comb_model_data %>%
@@ -769,7 +775,9 @@ print(final_figure)
 ggsave("~/Documents/GitHub/PSCI3200_Final/data/combined_execorr_plot.png", final_figure, width = 14, height = 6, dpi = 300)
 
 ```
-Loan Quantity to Show Angola 
+
+Loan Quantity to Show Angola
+
 ```{r}
 ggplot(oil_agg %>% filter(!is.na(year_count), !is.na(Year)), 
        aes(x = Year, y = year_count, color = Country, group = Country)) +
@@ -785,5 +793,3 @@ ggplot(oil_agg %>% filter(!is.na(year_count), !is.na(Year)),
 
 
 ```
-
-
